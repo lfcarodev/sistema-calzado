@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Calzado.API/Calzado.API.csproj" />
+    <Project Path="src/Calzado.Application/Calzado.Application.csproj" />
+    <Project Path="src/Calzado.Domain/Calzado.Domain.csproj" />
+    <Project Path="src/Calzado.Infrastructure/Calzado.Infrastructure.csproj" />
+  </Folder>
+</Solution>

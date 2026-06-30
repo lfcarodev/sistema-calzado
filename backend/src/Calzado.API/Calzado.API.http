@@ -1,0 +1,6 @@
+@Calzado.API_HostAddress = http://localhost:5051
+
+GET {{Calzado.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
