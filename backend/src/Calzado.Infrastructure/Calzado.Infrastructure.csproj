@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Calzado.Domain\Calzado.Domain.csproj" />
+    <ProjectReference Include="..\Calzado.Application\Calzado.Application.csproj" />
   </ItemGroup>
 
 </Project>
