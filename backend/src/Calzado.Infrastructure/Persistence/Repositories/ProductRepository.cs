@@ -18,10 +18,13 @@ public class ProductRepository : IProductRepository
         await _context.Products.AddAsync(product, cancellationToken);
     }
 
-    public async Task<Product?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+    public async Task<Product?> GetByIdAsync(
+        int id,
+        CancellationToken cancellationToken = default)
     {
         return await _context.Products
             .Include(p => p.Supplier)
+            .Include(p => p.StockMovements)
             .FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
     }
 

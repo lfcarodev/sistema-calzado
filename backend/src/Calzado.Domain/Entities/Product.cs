@@ -1,5 +1,6 @@
 using Calzado.Domain.Common;
 using Calzado.Domain.ValueObjects;
+using Calzado.Domain.Enums;
 
 namespace Calzado.Domain.Entities;
 
@@ -13,6 +14,7 @@ public class Product : AuditableEntity
     public string? PhotoPath { get; private set; }
     public int SupplierId { get; private set; }
     public Supplier Supplier { get; private set; } = null!;
+    public ICollection<StockMovement> StockMovements { get; private set; } = new List<StockMovement>();
 
     private Product()
     {
@@ -103,5 +105,32 @@ public class Product : AuditableEntity
         Curve = curve ?? throw new ArgumentNullException(nameof(curve));
 
         UpdatedAt = DateTime.UtcNow;
+    }
+
+    public StockMovement RegisterMovement(
+    MovementType type,
+    int quantity,
+    string? observation = null)
+    {
+        var movement = new StockMovement(
+            this,
+            quantity,
+            type,
+            observation);
+
+        StockMovements.Add(movement);
+
+        if (type == MovementType.Entry)
+        {
+            UpdateStock(quantity);
+        }
+        else if (type == MovementType.Exit)
+        {
+            UpdateStock(-quantity);
+        }
+
+        UpdatedAt = DateTime.UtcNow;
+
+        return movement;
     }
 }
