@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Calzado.Application.Products.Queries.GetProducts;
 using Calzado.Application.Products.Commands.UpdateProduct;
 using Calzado.Application.Products.Queries.SearchProducts;
+using Calzado.Application.Products.Queries.GetProductById;
 
 namespace Calzado.API.Controllers;
 
@@ -42,6 +43,20 @@ public class ProductsController : ControllerBase
             new SearchProductsQuery(reference));
 
         return Ok(products);
+    }
+
+    [HttpGet("{id}")]
+    public async Task<ActionResult<ProductDto>> GetProductById(int id)
+    {
+        var product = await _mediator.Send(
+            new GetProductByIdQuery(id));
+
+        if (product is null)
+        {
+            return NotFound();
+        }
+
+        return Ok(product);
     }
 
     [HttpPut("{id}")]
