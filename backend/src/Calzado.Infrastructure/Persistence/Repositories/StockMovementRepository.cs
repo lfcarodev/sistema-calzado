@@ -16,6 +16,8 @@ public class StockMovementRepository : IStockMovementRepository
         StockMovement movement,
         CancellationToken cancellationToken = default)
     {
-        await _context.StockMovements.AddAsync(movement, cancellationToken);
+        await _context.StockMovements.AddAsync(
+            movement,
+            cancellationToken);
     }
 }
