@@ -133,4 +133,20 @@ public class Product : AuditableEntity
 
         return movement;
     }
+
+    public void Update(
+    string color,
+    Curve curve,
+    Supplier supplier,
+    decimal? salePrice,
+    string? photoPath)
+    {
+        SetColor(color);
+        ChangeCurve(curve);
+        ChangeSupplier(supplier);
+        UpdateSalePrice(salePrice);
+        UpdatePhoto(photoPath);
+
+        UpdatedAt = DateTime.UtcNow;
+    }
 }

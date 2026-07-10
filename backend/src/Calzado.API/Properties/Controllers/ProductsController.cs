@@ -2,6 +2,7 @@ using Calzado.Application.Products.Commands.CreateProduct;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Calzado.Application.Products.Queries.GetProducts;
+using Calzado.Application.Products.Commands.UpdateProduct;
 
 namespace Calzado.API.Controllers;
 
@@ -30,5 +31,20 @@ public class ProductsController : ControllerBase
         var products = await _mediator.Send(new GetProductsQuery());
 
         return Ok(products);
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateProduct(
+    int id,
+    UpdateProductCommand command)
+    {
+        if (id != command.Id)
+        {
+            return BadRequest();
+        }
+
+        await _mediator.Send(command);
+
+        return NoContent();
     }
 }
