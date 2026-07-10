@@ -51,4 +51,18 @@ public class ProductRepository : IProductRepository
             .ThenBy(p => p.Color)
             .ToListAsync(cancellationToken);
     }
+
+    public async Task<List<Product>> SearchByReferenceAsync(
+    string reference,
+    CancellationToken cancellationToken = default)
+    {
+        reference = reference.Trim().ToUpper();
+
+        return await _context.Products
+            .Include(p => p.Supplier)
+            .Where(p => p.Reference.Contains(reference))
+            .OrderBy(p => p.Reference)
+            .ThenBy(p => p.Color)
+            .ToListAsync(cancellationToken);
+    }
 }

@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Calzado.Application.Products.Queries.GetProducts;
 using Calzado.Application.Products.Commands.UpdateProduct;
+using Calzado.Application.Products.Queries.SearchProducts;
 
 namespace Calzado.API.Controllers;
 
@@ -29,6 +30,16 @@ public class ProductsController : ControllerBase
     public async Task<ActionResult<List<ProductDto>>> GetProducts()
     {
         var products = await _mediator.Send(new GetProductsQuery());
+
+        return Ok(products);
+    }
+
+    [HttpGet("search")]
+    public async Task<ActionResult<List<ProductDto>>> SearchProducts(
+    [FromQuery] string reference)
+    {
+        var products = await _mediator.Send(
+            new SearchProductsQuery(reference));
 
         return Ok(products);
     }

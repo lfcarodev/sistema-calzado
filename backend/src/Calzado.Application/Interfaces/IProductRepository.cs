@@ -18,4 +18,8 @@ public interface IProductRepository
 
     Task<List<Product>> GetAllAsync(
         CancellationToken cancellationToken = default);
+
+    Task<List<Product>> SearchByReferenceAsync(
+    string reference,
+    CancellationToken cancellationToken = default);
 }
