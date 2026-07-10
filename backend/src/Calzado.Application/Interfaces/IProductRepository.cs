@@ -16,4 +16,6 @@ public interface IProductRepository
         int supplierId,
         CancellationToken cancellationToken = default);
 
+    Task<List<Product>> GetAllAsync(
+        CancellationToken cancellationToken = default);
 }

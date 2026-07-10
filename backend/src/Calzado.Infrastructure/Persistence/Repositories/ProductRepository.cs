@@ -41,4 +41,14 @@ public class ProductRepository : IProductRepository
                 p.SupplierId == supplierId,
                 cancellationToken);
     }
+
+    public async Task<List<Product>> GetAllAsync(
+    CancellationToken cancellationToken = default)
+    {
+        return await _context.Products
+            .Include(p => p.Supplier)
+            .OrderBy(p => p.Reference)
+            .ThenBy(p => p.Color)
+            .ToListAsync(cancellationToken);
+    }
 }
