@@ -1,6 +1,10 @@
 using Calzado.Application.Products.Commands.CreateProduct;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Calzado.Application.Products.Queries.GetProducts;
+using Calzado.Application.Products.Commands.UpdateProduct;
+using Calzado.Application.Products.Queries.SearchProducts;
+using Calzado.Application.Products.Queries.GetProductById;
 
 namespace Calzado.API.Controllers;
 
@@ -21,5 +25,52 @@ public class ProductsController : ControllerBase
         var id = await _mediator.Send(command);
 
         return CreatedAtAction(nameof(Create), new { id }, new { id });
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<List<ProductDto>>> GetProducts()
+    {
+        var products = await _mediator.Send(new GetProductsQuery());
+
+        return Ok(products);
+    }
+
+    [HttpGet("search")]
+    public async Task<ActionResult<List<ProductDto>>> SearchProducts(
+    [FromQuery] string reference)
+    {
+        var products = await _mediator.Send(
+            new SearchProductsQuery(reference));
+
+        return Ok(products);
+    }
+
+    [HttpGet("{id}")]
+    public async Task<ActionResult<ProductDto>> GetProductById(int id)
+    {
+        var product = await _mediator.Send(
+            new GetProductByIdQuery(id));
+
+        if (product is null)
+        {
+            return NotFound();
+        }
+
+        return Ok(product);
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateProduct(
+    int id,
+    UpdateProductCommand command)
+    {
+        if (id != command.Id)
+        {
+            return BadRequest();
+        }
+
+        await _mediator.Send(command);
+
+        return NoContent();
     }
 }
