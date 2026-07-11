@@ -46,48 +46,54 @@ public class SalePdfDocument : IDocument
             "Assets",
             "Logo.png");
 
-        column.Item().Row(row =>
+        column.Item().Table(table =>
         {
-            row.ConstantItem(90).Element(container =>
+            table.ColumnsDefinition(columns =>
             {
-                container
-                    .Height(90)
-                    .Image(logoPath)
-                    .FitWidth();
+                columns.ConstantColumn(100);
+                columns.RelativeColumn();
             });
 
-            row.RelativeItem().Column(info =>
-            {
-                info.Item()
-                    .AlignCenter()
-                    .Text("DISTRIBUIDORA EVELIO")
-                    .FontSize(22)
-                    .Bold();
+            table.Cell()
+                .AlignCenter()
+                .AlignMiddle()
+                .Image(logoPath);
 
-                info.Item()
-                    .AlignCenter()
-                    .Text("Barranquilla - Colombia");
+            table.Cell()
+                .PaddingLeft(15)
+                .Column(info =>
+                {
+                    info.Spacing(3);
 
-                info.Item()
-                    .AlignCenter()
-                    .Text("NIT: 900.000.000-0");
+                    info.Item()
+                        .Text("CALZADO LOS SOCIOS")
+                        .FontSize(24)
+                        .Bold();
 
-                info.Item()
-                    .AlignCenter()
-                    .Text("Tel: 300 123 4567");
-            });
+                    info.Item()
+                        .Text("Barranquilla - Colombia")
+                        .FontSize(11);
+
+                    info.Item()
+                        .Text("NIT: 900.000.000-0")
+                        .FontSize(11);
+
+                    info.Item()
+                        .Text("Tel: 300 123 4567")
+                        .FontSize(11);
+                });
         });
 
-        column.Item().PaddingTop(15);
+        column.Item().PaddingVertical(10);
 
         column.Item().LineHorizontal(1);
 
-        column.Item().PaddingTop(10);
+        column.Item().PaddingTop(15);
 
         column.Item()
             .AlignCenter()
             .Text("REMISIÓN")
-            .FontSize(18)
+            .FontSize(20)
             .Bold();
 
         column.Item()
@@ -101,11 +107,52 @@ public class SalePdfDocument : IDocument
 
     private void CustomerSection(ColumnDescriptor column)
     {
-        column.Item().Text($"Cliente: {_model.CustomerName}");
+        column.Item().Table(table =>
+        {
+            table.ColumnsDefinition(columns =>
+            {
+                columns.RelativeColumn();
+                columns.RelativeColumn();
+            });
 
-        column.Item().Text($"Teléfono: {_model.Phone}");
+            // Primera fila
+            table.Cell()
+                .Border(1)
+                .Padding(8)
+                .Column(x =>
+                {
+                    x.Item().Text("Cliente").Bold().FontSize(11);
+                    x.Item().Text(_model.CustomerName);
+                });
 
-        column.Item().Text($"Fecha: {_model.Date:dd/MM/yyyy}");
+            table.Cell()
+                .Border(1)
+                .Padding(8)
+                .Column(x =>
+                {
+                    x.Item().Text("Fecha").Bold().FontSize(11);
+                    x.Item().Text(_model.Date.ToString("dd/MM/yyyy"));
+                });
+
+            // Segunda fila
+            table.Cell()
+                .Border(1)
+                .Padding(8)
+                .Column(x =>
+                {
+                    x.Item().Text("Teléfono").Bold().FontSize(11);
+                    x.Item().Text(_model.Phone ?? "No registrado");
+                });
+
+            table.Cell()
+                .Border(1)
+                .Padding(8)
+                .Column(x =>
+                {
+                    x.Item().Text("Remisión").Bold().FontSize(11);
+                    x.Item().Text(_model.Number);
+                });
+        });
 
         column.Item().PaddingBottom(20);
     }
@@ -124,25 +171,44 @@ public class SalePdfDocument : IDocument
                 columns.RelativeColumn(2); // Total
             });
 
-
             table.Header(header =>
             {
-                header.Cell().Text("Referencia").Bold();
-                header.Cell().Text("Color").Bold();
-                header.Cell().Text("Curva").Bold();
-                header.Cell().Text("Cant.").Bold();
-                header.Cell().AlignRight().Text("Precio").Bold();
-                header.Cell().AlignRight().Text("Total").Bold();
+                static IContainer HeaderCell(IContainer container)
+                {
+                    return container
+                        .Background("#E5E7EB")
+                        .Border(1)
+                        .BorderColor("#BDBDBD")
+                        .PaddingVertical(6)
+                        .PaddingHorizontal(4);
+                }
+
+                HeaderCell(header.Cell()).Text("Referencia").Bold();
+                HeaderCell(header.Cell()).AlignCenter().Text("Color").Bold();
+                HeaderCell(header.Cell()).AlignCenter().Text("Curva").Bold();
+                HeaderCell(header.Cell()).AlignCenter().Text("Cant.").Bold();
+                HeaderCell(header.Cell()).AlignRight().Text("Precio").Bold();
+                HeaderCell(header.Cell()).AlignRight().Text("Total").Bold();
             });
 
             foreach (var item in _model.Items)
             {
-                table.Cell().Text(item.Reference);
-                table.Cell().Text(item.Color);
-                table.Cell().Text(item.Curve);
-                table.Cell().Text(item.Quantity.ToString());
-                table.Cell().AlignRight().Text(item.UnitPrice.ToString("C0"));
-                table.Cell().AlignRight().Text(item.Total.ToString("C0"));
+                table.Cell().BorderBottom(1).BorderColor("#DDDDDD").PaddingVertical(5).Text(item.Reference);
+
+                table.Cell().BorderBottom(1).BorderColor("#DDDDDD").PaddingVertical(5)
+                    .AlignCenter().Text(item.Color);
+
+                table.Cell().BorderBottom(1).BorderColor("#DDDDDD").PaddingVertical(5)
+                    .AlignCenter().Text(item.Curve);
+
+                table.Cell().BorderBottom(1).BorderColor("#DDDDDD").PaddingVertical(5)
+                    .AlignCenter().Text(item.Quantity.ToString());
+
+                table.Cell().BorderBottom(1).BorderColor("#DDDDDD").PaddingVertical(5)
+                    .AlignRight().Text(item.UnitPrice.ToString("C0"));
+
+                table.Cell().BorderBottom(1).BorderColor("#DDDDDD").PaddingVertical(5)
+                    .AlignRight().Text(item.Total.ToString("C0"));
             }
         });
 
@@ -153,10 +219,24 @@ public class SalePdfDocument : IDocument
     {
         column.Item()
             .AlignRight()
-            .Text(text =>
+            .Width(220)
+            .Border(1)
+            .BorderColor("#BDBDBD")
+            .Background("#F5F5F5")
+            .Padding(10)
+            .Column(total =>
             {
-                text.Span("TOTAL: ").Bold();
-                text.Span(_model.Total.ToString("C0"));
+                total.Item()
+                    .AlignCenter()
+                    .Text("TOTAL")
+                    .Bold()
+                    .FontSize(14);
+
+                total.Item()
+                    .AlignCenter()
+                    .Text(_model.Total.ToString("C0"))
+                    .FontSize(18)
+                    .Bold();
             });
 
         column.Item().PaddingBottom(20);
@@ -164,20 +244,26 @@ public class SalePdfDocument : IDocument
 
     private void Footer(ColumnDescriptor column)
     {
-        column.Item().Text("Observaciones:");
+        column.Item()
+            .Text("Observaciones")
+            .Bold()
+            .FontSize(11);
 
         column.Item()
             .Border(1)
-            .Padding(8)
-            .MinHeight(50)
-            .Text(_model.Observation ?? string.Empty);
+            .BorderColor("#BDBDBD")
+            .Padding(10)
+            .MinHeight(70)
+            .Text(string.IsNullOrWhiteSpace(_model.Observation)
+                ? "Sin observaciones."
+                : _model.Observation);
 
         column.Item().PaddingTop(20);
 
         column.Item()
             .AlignCenter()
             .Text("Gracias por su compra.")
-            .Italic();
+            .Italic()
+            .FontSize(11);
     }
 }
-

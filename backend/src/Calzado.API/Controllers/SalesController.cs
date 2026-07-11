@@ -31,11 +31,11 @@ public class SalesController : ControllerBase
     [HttpGet("{id}/pdf")]
     public async Task<IActionResult> GetPdf(int id)
     {
-        var pdf = await _mediator.Send(new GetSalePdfQuery(id));
+        var result = await _mediator.Send(new GetSalePdfQuery(id));
 
         return File(
-            pdf,
+            result.Pdf,
             "application/pdf",
-            $"Remision-{id}.pdf");
+            $"Remision-{result.Number}.pdf");
     }
 }

@@ -5,7 +5,7 @@ using MediatR;
 namespace Calzado.Application.Sales.Queries.GetSalePdf;
 
 public class GetSalePdfQueryHandler
-    : IRequestHandler<GetSalePdfQuery, byte[]>
+    : IRequestHandler<GetSalePdfQuery, SalePdfResult>
 {
     private readonly ISaleRepository _saleRepository;
     private readonly IPdfGenerator _pdfGenerator;
@@ -18,7 +18,7 @@ public class GetSalePdfQueryHandler
         _pdfGenerator = pdfGenerator;
     }
 
-    public async Task<byte[]> Handle(
+    public async Task<SalePdfResult> Handle(
     GetSalePdfQuery request,
     CancellationToken cancellationToken)
     {
@@ -53,6 +53,11 @@ public class GetSalePdfQueryHandler
                 Total = detail.Total
             });
         }
-        return _pdfGenerator.GenerateSalePdf(model);
+
+        return new SalePdfResult
+        {
+            Pdf = _pdfGenerator.GenerateSalePdf(model),
+            Number = sale.Number
+        };
     }
 }
