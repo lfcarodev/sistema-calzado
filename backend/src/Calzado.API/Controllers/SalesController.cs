@@ -1,4 +1,5 @@
 using Calzado.Application.Sales.Commands.CreateSale;
+using Calzado.Application.Sales.Queries.GetSalePdf;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,5 +26,16 @@ public class SalesController : ControllerBase
         {
             Number = saleNumber
         });
+    }
+
+    [HttpGet("{id}/pdf")]
+    public async Task<IActionResult> GetPdf(int id)
+    {
+        var pdf = await _mediator.Send(new GetSalePdfQuery(id));
+
+        return File(
+            pdf,
+            "application/pdf",
+            $"Remision-{id}.pdf");
     }
 }

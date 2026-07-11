@@ -1,5 +1,6 @@
 using Calzado.Domain.Entities;
 
+
 namespace Calzado.Application.Interfaces;
 
 public interface ISaleRepository
@@ -10,5 +11,9 @@ public interface ISaleRepository
 
     Task<string?> GetLastNumberAsync(
         int year,
+        CancellationToken cancellationToken = default);
+
+    Task<Sale?> GetByIdAsync(
+        int id,
         CancellationToken cancellationToken = default);
 }

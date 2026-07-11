@@ -48,7 +48,13 @@ public class SalePdfDocument : IDocument
 
         column.Item().Row(row =>
         {
-            row.ConstantItem(90).Height(90).Image(logoPath);
+            row.ConstantItem(90).Element(container =>
+            {
+                container
+                    .Height(90)
+                    .Image(logoPath)
+                    .FitWidth();
+            });
 
             row.RelativeItem().Column(info =>
             {
