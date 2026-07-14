@@ -14,6 +14,16 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddControllers();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("Frontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Services.AddMediatR(cfg =>
@@ -31,6 +41,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("Frontend");
 
 var summaries = new[]
 {

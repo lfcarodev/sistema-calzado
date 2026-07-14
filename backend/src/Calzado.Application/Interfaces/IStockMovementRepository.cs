@@ -7,4 +7,7 @@ public interface IStockMovementRepository
     Task AddAsync(
         StockMovement movement,
         CancellationToken cancellationToken = default);
+
+    Task<List<StockMovement>> GetAllAsync(
+        CancellationToken cancellationToken = default);
 }
