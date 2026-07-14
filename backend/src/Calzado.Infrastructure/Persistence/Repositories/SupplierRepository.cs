@@ -21,6 +21,14 @@ public class SupplierRepository : ISupplierRepository
             .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
     }
 
+    public async Task<List<Supplier>> GetAllAsync(
+        CancellationToken cancellationToken = default)
+    {
+        return await _context.Suppliers
+            .OrderBy(x => x.Name)
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task AddAsync(
     Supplier supplier,
     CancellationToken cancellationToken = default)

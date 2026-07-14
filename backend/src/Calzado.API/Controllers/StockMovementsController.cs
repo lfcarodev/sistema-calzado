@@ -1,5 +1,6 @@
 using Calzado.Application.StockMovements.Commands.RegisterEntry;
 using Calzado.Application.StockMovements.Commands.RegisterExit;
+using Calzado.Application.StockMovements.Queries.GetStockMovements;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,6 +15,12 @@ public class StockMovementsController : ControllerBase
     public StockMovementsController(IMediator mediator)
     {
         _mediator = mediator;
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<List<StockMovementDto>>> GetStockMovements()
+    {
+        return Ok(await _mediator.Send(new GetStockMovementsQuery()));
     }
 
     [HttpPost("entry")]

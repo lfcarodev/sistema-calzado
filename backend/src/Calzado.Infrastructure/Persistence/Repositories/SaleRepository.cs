@@ -43,4 +43,10 @@ public class SaleRepository : ISaleRepository
                 s => s.Id == id,
                 cancellationToken);
     }
+
+    public async Task<List<Sale>> GetAllAsync(CancellationToken cancellationToken = default)
+    {
+        return await _context.Sales.Include(s => s.Customer)
+            .OrderByDescending(s => s.Date).ToListAsync(cancellationToken);
+    }
 }

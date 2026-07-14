@@ -1,4 +1,5 @@
 using Calzado.Application.Suppliers.Commands.CreateSupplier;
+using Calzado.Application.Suppliers.Queries.GetSuppliers;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,6 +14,14 @@ public class SuppliersController : ControllerBase
     public SuppliersController(IMediator mediator)
     {
         _mediator = mediator;
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<List<SupplierDto>>> GetSuppliers()
+    {
+        var suppliers = await _mediator.Send(new GetSuppliersQuery());
+
+        return Ok(suppliers);
     }
 
     [HttpPost]

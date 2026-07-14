@@ -14,5 +14,9 @@ public class ProductDto
 
     public decimal? SalePrice { get; set; }
 
+    public string? PhotoPath { get; set; }
+
+    public int SupplierId { get; set; }
+
     public string Supplier { get; set; } = null!;
 }

@@ -27,6 +27,8 @@ public class GetProductsQueryHandler
             Curve = product.Curve.ToString(),
             CurrentStock = product.CurrentStock,
             SalePrice = product.SalePrice,
+            PhotoPath = product.PhotoPath,
+            SupplierId = product.SupplierId,
             Supplier = product.Supplier.Name
         }).ToList();
     }

@@ -8,6 +8,9 @@ public interface ISupplierRepository
         int id,
         CancellationToken cancellationToken = default);
 
+    Task<List<Supplier>> GetAllAsync(
+        CancellationToken cancellationToken = default);
+
     Task AddAsync(
         Supplier supplier,
         CancellationToken cancellationToken = default);
