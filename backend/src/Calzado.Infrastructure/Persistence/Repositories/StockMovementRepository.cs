@@ -1,5 +1,6 @@
 using Calzado.Application.Interfaces;
 using Calzado.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Calzado.Infrastructure.Persistence.Repositories;
 
@@ -19,5 +20,11 @@ public class StockMovementRepository : IStockMovementRepository
         await _context.StockMovements.AddAsync(
             movement,
             cancellationToken);
+    }
+
+    public async Task<List<StockMovement>> GetAllAsync(CancellationToken cancellationToken = default)
+    {
+        return await _context.StockMovements.Include(m => m.Product)
+            .OrderByDescending(m => m.CreatedAt).ToListAsync(cancellationToken);
     }
 }

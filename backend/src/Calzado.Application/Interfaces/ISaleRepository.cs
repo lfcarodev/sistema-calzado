@@ -16,4 +16,7 @@ public interface ISaleRepository
     Task<Sale?> GetByIdAsync(
         int id,
         CancellationToken cancellationToken = default);
+
+    Task<List<Sale>> GetAllAsync(
+        CancellationToken cancellationToken = default);
 }

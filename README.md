@@ -1,21 +1,51 @@
-# Sistema de Gestión de Inventario para Distribuidora de Calzado
+# Sistema de Gestión para Distribuidora de Calzado
 
-Sistema desarrollado para la administración de inventario, clientes, remisiones y movimientos de una distribuidora de calzado.
+Sistema empresarial para la gestión de inventario, ventas y remisiones desarrollado para una distribuidora de calzado.
 
 ## Tecnologías
 
-- ASP.NET Core (.NET 10)
+### Backend
+
+- .NET 10
+- ASP.NET Core Web API
+- Clean Architecture
+- CQRS
+- MediatR
 - Entity Framework Core
 - SQL Server
+- QuestPDF
+
+### Frontend
+
 - Next.js
 - TypeScript
 - Tailwind CSS
 
+## Funcionalidades
+
+- Gestión de productos
+- Gestión de proveedores
+- Gestión de clientes
+- Control de inventario
+- Movimientos de stock
+- Registro de ventas
+- Descuento automático de inventario
+- Generación de remisiones PDF
+- Descarga profesional de remisiones
+
 ## Arquitectura
 
-- Clean Architecture
-- REST API
+```
+Calzado.API
+Calzado.Application
+Calzado.Domain
+Calzado.Infrastructure
+```
 
-## Metodología
+El proyecto sigue los principios de Clean Architecture y separación de responsabilidades.
 
-- Scrum
+## Estado del proyecto
+
+Backend prácticamente finalizado.
+
+Actualmente se encuentra en desarrollo el frontend con Next.js.

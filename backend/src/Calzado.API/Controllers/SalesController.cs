@@ -1,5 +1,6 @@
 using Calzado.Application.Sales.Commands.CreateSale;
 using Calzado.Application.Sales.Queries.GetSalePdf;
+using Calzado.Application.Sales.Queries.GetSales;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,6 +15,12 @@ public class SalesController : ControllerBase
     public SalesController(IMediator mediator)
     {
         _mediator = mediator;
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<List<SaleDto>>> GetSales()
+    {
+        return Ok(await _mediator.Send(new GetSalesQuery()));
     }
 
     [HttpPost]
