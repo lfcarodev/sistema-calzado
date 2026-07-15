@@ -18,6 +18,7 @@ Sistema empresarial para la gestión de inventario, ventas y remisiones desarrol
 ### Frontend
 
 - Next.js
+- React
 - TypeScript
 - Tailwind CSS
 
@@ -35,17 +36,58 @@ Sistema empresarial para la gestión de inventario, ventas y remisiones desarrol
 
 ## Arquitectura
 
-```
+### Backend
+
+```text
+backend/src/
+
 Calzado.API
 Calzado.Application
 Calzado.Domain
 Calzado.Infrastructure
 ```
 
-El proyecto sigue los principios de Clean Architecture y separación de responsabilidades.
+### Frontend
+
+```text
+frontend/src/
+
+app
+features
+components
+lib
+```
+
+El proyecto sigue los principios de **Clean Architecture**, separación de responsabilidades y el patrón **CQRS**.
+
+## Puesta en marcha
+
+### Backend
+
+```bash
+cd backend
+dotnet restore
+dotnet ef database update
+dotnet run --project src/Calzado.API
+```
+
+### Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
 ## Estado del proyecto
 
-Backend prácticamente finalizado.
+Actualmente el sistema incluye:
 
-Actualmente se encuentra en desarrollo el frontend con Next.js.
+- Backend completamente funcional.
+- Frontend administrativo desarrollado con Next.js.
+- Integración completa entre frontend y backend.
+- Generación y descarga de remisiones en PDF.
+
+## Autor
+
+**@lfcarodev**
