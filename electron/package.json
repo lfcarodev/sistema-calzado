@@ -1,0 +1,41 @@
+{
+  "name": "calzado-desktop",
+  "version": "1.0.0",
+  "description": "Desktop application for Sistema de Gestión para Distribuidora de Calzado",
+  "author": "Luis Felipe Caro Espinosa",
+  "license": "MIT",
+  "private": true,
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder"
+  },
+  "dependencies": {
+    "execa": "^9.6.1"
+  },
+  "devDependencies": {
+    "electron": "^43.1.1",
+    "electron-builder": "^26.15.3"
+  },
+  "build": {
+    "appId": "com.lfcarodev.calzado",
+    "productName": "Sistema de Gestión - Calzado Los Socios",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "**/*"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "assets/icon.ico",
+      "artifactName": "SistemaCalzadoSetup.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
+  }
+}

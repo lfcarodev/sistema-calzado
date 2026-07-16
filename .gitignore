@@ -49,3 +49,5 @@ Thumbs.db
 backend/uploads/
 
 AI_CONTEXT.MD
+
+electron/node_modules/

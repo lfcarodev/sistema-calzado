@@ -3,7 +3,7 @@ import { AppShell } from "@/components/layout/app-shell";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Calzado Los Socios",
+  title: "Sistema de Gestión - Calzado Los Socios",
   description: "Sistema de gestión para distribuidora de calzado",
 };
 
