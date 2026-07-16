@@ -47,7 +47,11 @@ Thumbs.db
 # ===========================
 
 backend/uploads/
-
 AI_CONTEXT.MD
 
+# ===========================
+# Electron
+# ===========================
+
 electron/node_modules/
+electron/dist/

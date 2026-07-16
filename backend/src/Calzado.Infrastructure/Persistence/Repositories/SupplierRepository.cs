@@ -35,4 +35,9 @@ public class SupplierRepository : ISupplierRepository
     {
         await _context.Suppliers.AddAsync(supplier, cancellationToken);
     }
+
+    public async Task<int> CountAsync(CancellationToken cancellationToken)
+    {
+        return await _context.Suppliers.CountAsync(cancellationToken);
+    }
 }

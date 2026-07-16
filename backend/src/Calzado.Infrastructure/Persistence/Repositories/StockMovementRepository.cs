@@ -27,4 +27,13 @@ public class StockMovementRepository : IStockMovementRepository
         return await _context.StockMovements.Include(m => m.Product)
             .OrderByDescending(m => m.CreatedAt).ToListAsync(cancellationToken);
     }
+
+    public async Task<int> CountLowStockProductsAsync(
+    CancellationToken cancellationToken)
+    {
+        return await _context.Products
+            .CountAsync(
+                x => x.CurrentStock <= 5,
+                cancellationToken);
+    }
 }

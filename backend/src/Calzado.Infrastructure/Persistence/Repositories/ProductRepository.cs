@@ -65,4 +65,9 @@ public class ProductRepository : IProductRepository
             .ThenBy(p => p.Color)
             .ToListAsync(cancellationToken);
     }
+
+    public async Task<int> CountAsync(CancellationToken cancellationToken)
+    {
+        return await _context.Products.CountAsync(cancellationToken);
+    }
 }

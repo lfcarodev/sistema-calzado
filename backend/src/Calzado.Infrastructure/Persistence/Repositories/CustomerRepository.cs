@@ -29,4 +29,9 @@ public class CustomerRepository : ICustomerRepository
     {
         await _context.Customers.AddAsync(customer, cancellationToken);
     }
+
+    public async Task<int> CountAsync(CancellationToken cancellationToken)
+    {
+        return await _context.Customers.CountAsync(cancellationToken);
+    }
 }

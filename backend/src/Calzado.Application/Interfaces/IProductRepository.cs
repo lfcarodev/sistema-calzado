@@ -22,4 +22,6 @@ public interface IProductRepository
     Task<List<Product>> SearchByReferenceAsync(
     string reference,
     CancellationToken cancellationToken = default);
+
+    Task<int> CountAsync(CancellationToken cancellationToken);
 }

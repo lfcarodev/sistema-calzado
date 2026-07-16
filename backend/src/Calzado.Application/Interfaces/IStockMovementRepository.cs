@@ -10,4 +10,6 @@ public interface IStockMovementRepository
 
     Task<List<StockMovement>> GetAllAsync(
         CancellationToken cancellationToken = default);
+
+    Task<int> CountLowStockProductsAsync(CancellationToken cancellationToken);
 }

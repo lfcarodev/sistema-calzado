@@ -49,4 +49,14 @@ public class SaleRepository : ISaleRepository
         return await _context.Sales.Include(s => s.Customer)
             .OrderByDescending(s => s.Date).ToListAsync(cancellationToken);
     }
+
+    public async Task<int> CountTodayAsync(CancellationToken cancellationToken)
+    {
+        var today = DateTime.Today;
+
+        return await _context.Sales
+            .CountAsync(
+                x => x.Date.Date == today,
+                cancellationToken);
+    }
 }
