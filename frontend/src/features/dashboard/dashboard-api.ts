@@ -13,3 +13,16 @@ export function getDashboardSummary() {
     cache: "no-store",
   });
 }
+
+export interface RecentSale {
+  number: string;
+  date: string;
+  customer: string;
+  total: number;
+}
+
+export function getRecentSales() {
+  return apiRequest<RecentSale[]>("/dashboard/recent-sales", {
+    cache: "no-store",
+  });
+}

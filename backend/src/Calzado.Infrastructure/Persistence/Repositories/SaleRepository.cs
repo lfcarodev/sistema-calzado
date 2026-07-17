@@ -59,4 +59,15 @@ public class SaleRepository : ISaleRepository
                 x => x.Date.Date == today,
                 cancellationToken);
     }
+
+    public async Task<List<Sale>> GetRecentAsync(
+    int count,
+    CancellationToken cancellationToken = default)
+    {
+        return await _context.Sales
+            .Include(s => s.Customer)
+            .OrderByDescending(s => s.Date)
+            .Take(count)
+            .ToListAsync(cancellationToken);
+    }
 }

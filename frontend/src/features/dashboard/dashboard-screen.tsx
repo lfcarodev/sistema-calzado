@@ -13,6 +13,7 @@ import {
   ShoppingCart,
   TriangleAlert,
 } from "lucide-react";
+import { RecentSales } from "./recent-sales";
 
 export function DashboardScreen() {
   const [summary, setSummary] = useState<DashboardSummary | null>(null);
@@ -84,6 +85,7 @@ export function DashboardScreen() {
       icon={TriangleAlert}
     />
   </div>
+  <RecentSales />
 </div>
   );
 }
