@@ -1,4 +1,5 @@
 using Calzado.Domain.Entities;
+using Calzado.Domain.ValueObjects;
 
 namespace Calzado.Application.Interfaces;
 
@@ -10,11 +11,12 @@ public interface IProductRepository
         int id,
         CancellationToken cancellationToken = default);
 
-    Task<Product?> GetByReferenceAsync(
-        string reference,
-        string color,
-        int supplierId,
-        CancellationToken cancellationToken = default);
+    Task<Product?> FindDuplicateAsync(
+    string reference,
+    string color,
+    Curve curve,
+    int supplierId,
+    CancellationToken cancellationToken);
 
     Task<List<Product>> GetAllAsync(
         CancellationToken cancellationToken = default);

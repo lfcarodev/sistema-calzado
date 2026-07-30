@@ -1,5 +1,6 @@
 using System.Reflection;
 using Calzado.Infrastructure.DependencyInjection;
+using Calzado.API.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +33,8 @@ builder.Services.AddMediatR(cfg =>
 });
 
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {
