@@ -40,7 +40,7 @@ export function ProductCombobox({
            product.salePrice !== null
         )
           .filter((product) =>
-            `${product.reference} ${product.color}`
+            `${product.reference} ${product.color} ${product.curve}`
                .toLowerCase()
                .includes(search)
      );
@@ -70,7 +70,9 @@ export function ProductCombobox({
 const selectProduct = (product: Product) => {
   onChange(product);
 
-  setQuery(`${product.reference} · ${product.color}`);
+  setQuery(
+  `${product.reference} · ${product.color} · ${product.curve}`
+);
   setIsOpen(false);
   setHighlightedIndex(-1);
 
@@ -159,7 +161,7 @@ const formatPrice = (price: number) =>
                 }`}
               >
                 <div className="font-medium">
-                  {product.reference} · {product.color}
+                  {product.reference} · {product.color} · {product.curve}
                 </div>
 
                 <div className="mt-1 text-xs text-slate-500">
