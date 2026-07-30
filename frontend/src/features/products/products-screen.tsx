@@ -15,6 +15,9 @@ const money = new Intl.NumberFormat("es-CO", {
   maximumFractionDigits: 0,
 });
 
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5051/api";
+
 const inputClass =
   "mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-100";
 
@@ -26,6 +29,8 @@ export function ProductsScreen() {
   const [message, setMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [selectedPhoto, setSelectedPhoto] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const loadProducts = useCallback(async (search?: string) => {
     setIsLoading(true);
@@ -66,11 +71,16 @@ export function ProductsScreen() {
         curveStart: Number(formData.get("curveStart")),
         curveEnd: Number(formData.get("curveEnd")),
         salePrice: formData.get("salePrice") ? Number(formData.get("salePrice")) : null,
-        photoPath: String(formData.get("photoPath")).trim() || null,
         supplierId: Number(formData.get("supplierId")),
+        photo: selectedPhoto,
       });
 
       form.reset();
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
+      setSelectedPhoto(null);
+      setPreviewUrl(null);
       setMessage("Producto creado correctamente.");
       await loadProducts(reference);
     } catch (error) {
@@ -111,9 +121,38 @@ export function ProductsScreen() {
               {suppliers.map((supplier) => <option key={supplier.id} value={supplier.id}>{supplier.name}</option>)}
             </select>
           </label>
-          <label className="text-sm font-medium text-slate-700">Ruta de foto (opcional)
-            <input name="photoPath" className={inputClass} />
-          </label>
+          <label className="text-sm font-medium text-slate-700">
+            📷 Foto del producto
+
+            <input
+              type="file"
+              accept="image/*"
+              className={inputClass}
+              onChange={(event) => {
+              const file = event.target.files?.[0] ?? null;
+
+              if (previewUrl) {
+                URL.revokeObjectURL(previewUrl);
+              }
+
+              setSelectedPhoto(file);
+
+              if (file) {
+                setPreviewUrl(URL.createObjectURL(file));
+              } else {
+                setPreviewUrl(null);
+              }
+            }}
+          />
+
+          {previewUrl && (
+            <img
+              src={previewUrl}
+              alt="Vista previa"
+              className="mt-3 h-40 w-40 rounded-md border object-cover"
+            />
+          )}
+        </label>
           <div className="flex items-end">
             <button disabled={isSaving || suppliers.length === 0} className="w-full rounded-md bg-slate-950 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50">
               {isSaving ? "Guardando..." : "Crear producto"}
@@ -136,9 +175,48 @@ export function ProductsScreen() {
         {message && <p className="mx-5 mt-4 rounded-md bg-amber-50 px-3 py-2 text-sm text-amber-800">{message}</p>}
         <div className="overflow-x-auto">
           <table className="w-full min-w-[720px] text-left text-sm">
-            <thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500"><tr><th className="px-5 py-3">Referencia</th><th>Color</th><th>Curva</th><th>Proveedor</th><th>Stock</th><th>Precio</th><th className="px-5">Acción</th></tr></thead>
+            <thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500"><tr><th className="px-5 py-3">Foto</th><th>Referencia</th><th>Color</th><th>Curva</th><th>Proveedor</th><th>Stock</th><th>Precio</th><th className="px-5">Acción</th></tr></thead>
             <tbody className="divide-y divide-slate-100 text-slate-700">
-              {isLoading ? <tr><td colSpan={7} className="px-5 py-8 text-center">Cargando productos...</td></tr> : products.length === 0 ? <tr><td colSpan={7} className="px-5 py-8 text-center">No hay productos para mostrar.</td></tr> : products.map((product) => <tr key={product.id}><td className="px-5 py-3 font-medium text-slate-900">{product.reference}</td><td>{product.color}</td><td>{product.curve}</td><td>{product.supplier}</td><td>{product.currentStock}</td><td>{product.salePrice === null ? "Sin definir" : money.format(product.salePrice)}</td><td className="px-5"><button onClick={() => setEditingProduct(product)} className="font-medium text-amber-700 hover:text-amber-900">Editar</button></td></tr>)}
+              {isLoading ? <tr><td colSpan={8} className="px-5 py-8 text-center">Cargando productos...</td></tr> : products.length === 0 ? <tr><td colSpan={8} className="px-5 py-8 text-center">No hay productos para mostrar.</td></tr> : products.map((product) => (
+  <tr key={product.id}>
+    <td className="px-5 py-4 align-middle">
+      {product.photoPath ? (
+        <img
+          src={`${API_URL.replace("/api", "")}/${product.photoPath}`}
+          alt={product.reference}
+          className="h-20 w-20 rounded-md border object-cover shadow-sm transition-transform hover:scale-105 cursor-pointer"
+        />
+      ) : (
+        <div className="flex h-20 w-20 items-center justify-center rounded-md border bg-slate-100 text-xs text-slate-400">
+          Sin foto
+        </div>
+      )}
+    </td>
+
+    <td className="font-medium text-slate-900">
+      {product.reference}
+    </td>
+
+    <td>{product.color}</td>
+    <td>{product.curve}</td>
+    <td>{product.supplier}</td>
+    <td>{product.currentStock}</td>
+    <td>
+      {product.salePrice === null
+        ? "Sin definir"
+        : money.format(product.salePrice)}
+    </td>
+
+    <td className="px-5">
+      <button
+        onClick={() => setEditingProduct(product)}
+        className="font-medium text-amber-700 hover:text-amber-900"
+      >
+        Editar
+      </button>
+    </td>
+  </tr>
+))}
             </tbody>
           </table>
         </div>

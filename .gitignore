@@ -43,10 +43,16 @@ frontend/out/
 Thumbs.db
 
 # ===========================
-# Uploads (cuando exista)
+# Uploads
 # ===========================
 
-backend/uploads/
+backend/src/Calzado.API/uploads/products/*
+!backend/src/Calzado.API/uploads/products/.gitkeep
+
+# ===========================
+# AI
+# ===========================
+
 AI_CONTEXT.MD
 
 # ===========================
