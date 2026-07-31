@@ -47,6 +47,14 @@ export function ProductCombobox({
   }, [products, query]);
 
   useEffect(() => {
+    if (value === null) {
+      setQuery("");
+      setIsOpen(false);
+      setHighlightedIndex(-1);
+    }
+  }, [value]);
+
+  useEffect(() => {
   function handleClickOutside(event: MouseEvent) {
     if (
       containerRef.current &&
