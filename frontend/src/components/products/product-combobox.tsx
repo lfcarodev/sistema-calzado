@@ -13,6 +13,7 @@ interface ProductComboboxProps {
   value: number | null;
   onChange: (product: Product | null) => void;
   onProductSelected?: () => void;
+  filterAvailableOnly?: boolean;
 }
 
 export function ProductCombobox({
@@ -20,6 +21,7 @@ export function ProductCombobox({
   value,
   onChange,
   onProductSelected,
+  filterAvailableOnly = true,
 }: ProductComboboxProps) {
   const [query, setQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -33,17 +35,19 @@ export function ProductCombobox({
       return products;
     }
 
-    return products
-       .filter(
-         (product) =>
-           product.currentStock > 0 &&
-           product.salePrice !== null
-        )
+    return products.filter((product) => {
+      if (!filterAvailableOnly) {
+        return true;
+      }
+
+    return (
+      product.currentStock > 0 &&
+      product.salePrice !== null
+    );
+  })
           .filter((product) =>
-            `${product.reference} ${product.color} ${product.curve}`
-               .toLowerCase()
-               .includes(search)
-     );
+            `${product.reference} ${product.color} ${product.curve}`.toLowerCase().includes(search)
+    );
   }, [products, query]);
 
   useEffect(() => {

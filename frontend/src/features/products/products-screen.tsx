@@ -173,7 +173,7 @@ export function ProductsScreen() {
           </form>
         </div>
         {message && <p className="mx-5 mt-4 rounded-md bg-amber-50 px-3 py-2 text-sm text-amber-800">{message}</p>}
-        <div className="overflow-x-auto">
+        <div className="max-h-[450px] overflow-y-auto overflow-x-auto">
           <table className="w-full min-w-[720px] text-left text-sm">
             <thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500"><tr><th className="px-5 py-3">Foto</th><th>Referencia</th><th>Color</th><th>Curva</th><th>Proveedor</th><th>Stock</th><th>Precio</th><th className="px-5">Acción</th></tr></thead>
             <tbody className="divide-y divide-slate-100 text-slate-700">
