@@ -4,6 +4,8 @@
 
 **/bin/
 **/obj/
+backend/**/bin/
+backend/**/obj/
 
 # Visual Studio
 .vs/
@@ -61,3 +63,13 @@ AI_CONTEXT.MD
 
 electron/node_modules/
 electron/dist/
+electron/.cache/
+electron/.vite/
+
+# ===========================
+# Builds
+# ===========================
+
+release/
+
+publish/
