@@ -97,7 +97,7 @@ El backend implementa **Clean Architecture** y el patrón **CQRS**, separando la
 
 # Capturas
 
-> (Agregar imágenes del sistema aquí)
+> (pronto)
 
 ---
 
