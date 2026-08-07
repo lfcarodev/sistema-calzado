@@ -2,6 +2,7 @@ using Calzado.Application.Interfaces;
 using Calzado.Domain.Entities;
 using Calzado.Domain.ValueObjects;
 using MediatR;
+using Calzado.Application.Common.Exceptions;
 
 namespace Calzado.Application.Products.Commands.CreateProduct;
 
@@ -31,24 +32,30 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
 
         if (supplier is null)
         {
-            throw new Exception("Supplier not found.");
+            throw new BusinessException("Proveedor no encontrado.");
         }
 
-        var existingProduct = await _productRepository.GetByReferenceAsync(
+        var curve = new Curve(
+            request.CurveStart,
+            request.CurveEnd);
+
+        var duplicate = await _productRepository.FindDuplicateAsync(
             request.Reference,
             request.Color,
+            curve,
             request.SupplierId,
             cancellationToken);
 
-        if (existingProduct is not null)
+        if (duplicate is not null)
         {
-            throw new Exception("A product with the same reference, color and supplier already exists.");
+            throw new BusinessException(
+                "Ya existe un producto con esa referencia, color y curva.");
         }
 
         var product = new Product(
             request.Reference,
             request.Color,
-            new Curve(request.CurveStart, request.CurveEnd),
+            curve,
             supplier,
             request.SalePrice,
             request.PhotoPath);

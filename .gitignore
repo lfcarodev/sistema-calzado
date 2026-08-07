@@ -4,6 +4,8 @@
 
 **/bin/
 **/obj/
+backend/**/bin/
+backend/**/obj/
 
 # Visual Studio
 .vs/
@@ -43,9 +45,31 @@ frontend/out/
 Thumbs.db
 
 # ===========================
-# Uploads (cuando exista)
+# Uploads
 # ===========================
 
-backend/uploads/
+backend/src/Calzado.API/uploads/products/*
+!backend/src/Calzado.API/uploads/products/.gitkeep
+
+# ===========================
+# AI
+# ===========================
 
 AI_CONTEXT.MD
+
+# ===========================
+# Electron
+# ===========================
+
+electron/node_modules/
+electron/dist/
+electron/.cache/
+electron/.vite/
+
+# ===========================
+# Builds
+# ===========================
+
+release/
+
+publish/

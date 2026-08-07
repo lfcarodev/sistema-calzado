@@ -1,6 +1,7 @@
 using Calzado.Application.Interfaces;
 using Calzado.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Calzado.Domain.ValueObjects;
 
 namespace Calzado.Infrastructure.Persistence.Repositories;
 
@@ -28,17 +29,20 @@ public class ProductRepository : IProductRepository
             .FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
     }
 
-    public async Task<Product?> GetByReferenceAsync(
-        string reference,
-        string color,
-        int supplierId,
-        CancellationToken cancellationToken = default)
+    public async Task<Product?> FindDuplicateAsync(
+    string reference,
+    string color,
+    Curve curve,
+    int supplierId,
+    CancellationToken cancellationToken)
     {
         return await _context.Products
             .FirstOrDefaultAsync(p =>
                 p.Reference == reference &&
                 p.Color == color &&
-                p.SupplierId == supplierId,
+                p.SupplierId == supplierId &&
+                p.Curve.StartSize == curve.StartSize &&
+                p.Curve.EndSize == curve.EndSize,
                 cancellationToken);
     }
 
@@ -64,5 +68,10 @@ public class ProductRepository : IProductRepository
             .OrderBy(p => p.Reference)
             .ThenBy(p => p.Color)
             .ToListAsync(cancellationToken);
+    }
+
+    public async Task<int> CountAsync(CancellationToken cancellationToken)
+    {
+        return await _context.Products.CountAsync(cancellationToken);
     }
 }

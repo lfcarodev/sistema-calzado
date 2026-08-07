@@ -1,42 +1,75 @@
 # Sistema de Gestión para Distribuidora de Calzado
 
-Sistema empresarial para la gestión de inventario, ventas y remisiones desarrollado para una distribuidora de calzado.
+Sistema de escritorio y web desarrollado para administrar una distribuidora de calzado, permitiendo controlar inventario, proveedores, productos y ventas, con generación automática de remisiones en PDF.
 
-## Tecnologías
+---
 
-### Backend
+## Características
+
+### 📦 Gestión de productos
+
+- Crear, editar y eliminar productos.
+- Registro de referencia, color, curva y proveedor.
+- Fotografía por producto.
+- Precio de venta.
+- Control de existencias.
+
+### 🚚 Gestión de proveedores
+
+- Crear, editar y eliminar proveedores.
+- Asociación automática de productos con proveedores.
+
+### 📊 Control de inventario
+
+- Entradas de mercancía.
+- Salidas de inventario.
+- Registro de movimientos.
+- Soporte para registrar cantidades por pares o docenas.
+- Búsqueda rápida de productos.
+- Visualización de fotografía y datos del producto antes de registrar un movimiento.
+
+### 💰 Gestión de ventas
+
+- Búsqueda inteligente de productos.
+- Venta por pares o docenas.
+- Validación automática del stock disponible.
+- Descuento automático del inventario.
+- Cálculo automático del total.
+- Historial de ventas.
+- Generación de remisiones en PDF.
+
+### 📄 Remisiones
+
+- Generación automática mediante QuestPDF.
+- Descarga directa desde la aplicación.
+
+---
+
+# Tecnologías
+
+## Backend
 
 - .NET 10
 - ASP.NET Core Web API
-- Clean Architecture
-- CQRS
-- MediatR
 - Entity Framework Core
 - SQL Server
+- MediatR
+- CQRS
+- Clean Architecture
 - QuestPDF
 
-### Frontend
+## Frontend
 
 - Next.js
 - React
 - TypeScript
 - Tailwind CSS
 
-## Funcionalidades
+---
 
-- Gestión de productos
-- Gestión de proveedores
-- Gestión de clientes
-- Control de inventario
-- Movimientos de stock
-- Registro de ventas
-- Descuento automático de inventario
-- Generación de remisiones PDF
-- Descarga profesional de remisiones
+# Arquitectura
 
-## Arquitectura
-
-### Backend
+## Backend
 
 ```text
 backend/src/
@@ -47,22 +80,30 @@ Calzado.Domain
 Calzado.Infrastructure
 ```
 
-### Frontend
+## Frontend
 
 ```text
 frontend/src/
 
 app
-features
 components
+features
 lib
 ```
 
-El proyecto sigue los principios de **Clean Architecture**, separación de responsabilidades y el patrón **CQRS**.
+El backend implementa **Clean Architecture** y el patrón **CQRS**, separando las responsabilidades entre dominio, aplicación, infraestructura y presentación.
 
-## Puesta en marcha
+---
 
-### Backend
+# Capturas
+
+> (Agregar imágenes del sistema aquí)
+
+---
+
+# Puesta en marcha
+
+## Backend
 
 ```bash
 cd backend
@@ -71,7 +112,7 @@ dotnet ef database update
 dotnet run --project src/Calzado.API
 ```
 
-### Frontend
+## Frontend
 
 ```bash
 cd frontend
@@ -79,15 +120,31 @@ npm install
 npm run dev
 ```
 
-## Estado del proyecto
+---
 
-Actualmente el sistema incluye:
+# Estado del proyecto
 
-- Backend completamente funcional.
-- Frontend administrativo desarrollado con Next.js.
-- Integración completa entre frontend y backend.
-- Generación y descarga de remisiones en PDF.
+✅ Gestión de productos
 
-## Autor
+✅ Gestión de proveedores
 
-**@lfcarodev**
+✅ Control de inventario
+
+✅ Registro de ventas
+
+✅ Historial de movimientos
+
+✅ Historial de ventas
+
+✅ Remisiones PDF
+
+🚧 Empaquetado como aplicación de escritorio con Electron (en desarrollo)
+
+---
+
+# Autor
+
+**Luis Felipe Caro Espinosa**
+
+GitHub:
+https://github.com/lfcarodev

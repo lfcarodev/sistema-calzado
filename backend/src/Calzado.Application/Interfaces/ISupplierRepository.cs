@@ -14,4 +14,6 @@ public interface ISupplierRepository
     Task AddAsync(
         Supplier supplier,
         CancellationToken cancellationToken = default);
+
+    Task<int> CountAsync(CancellationToken cancellationToken);
 }

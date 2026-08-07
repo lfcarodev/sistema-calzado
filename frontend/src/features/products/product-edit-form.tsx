@@ -15,6 +15,9 @@ const inputClass = "mt-1 w-full rounded-md border border-slate-300 px-3 py-2 tex
 export function ProductEditForm({ product, suppliers, onCancel, onSaved }: ProductEditFormProps) {
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [selectedPhoto, setSelectedPhoto] = useState<File | null>(null);
+  const apiUrl =
+    process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5051/api";
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -27,9 +30,11 @@ export function ProductEditForm({ product, suppliers, onCancel, onSaved }: Produ
         color: String(data.get("color")).trim(),
         curveStart: Number(data.get("curveStart")),
         curveEnd: Number(data.get("curveEnd")),
-        salePrice: data.get("salePrice") ? Number(data.get("salePrice")) : null,
-        photoPath: String(data.get("photoPath")).trim() || null,
+        salePrice: data.get("salePrice")
+          ? Number(data.get("salePrice"))
+          : null,
         supplierId: Number(data.get("supplierId")),
+        photo: selectedPhoto,
       });
       await onSaved();
     } catch (reason) {
@@ -49,7 +54,37 @@ export function ProductEditForm({ product, suppliers, onCancel, onSaved }: Produ
       <label className="text-sm font-medium text-slate-700">Curva final<input required min="1" name="curveEnd" type="number" defaultValue={curveEnd} className={inputClass} /></label>
       <label className="text-sm font-medium text-slate-700">Precio de venta<input min="0" name="salePrice" type="number" defaultValue={product.salePrice ?? ""} className={inputClass} /></label>
       <label className="text-sm font-medium text-slate-700">Proveedor<select required name="supplierId" defaultValue={product.supplierId} className={inputClass}>{suppliers.map((supplier) => <option key={supplier.id} value={supplier.id}>{supplier.name}</option>)}</select></label>
-      <label className="text-sm font-medium text-slate-700">Ruta de foto<input name="photoPath" defaultValue={product.photoPath ?? ""} className={inputClass} /></label>
+      <label className="text-sm font-medium text-slate-700">
+        Foto del producto
+
+      <div className="mt-2">
+        {product.photoPath && !selectedPhoto && (
+        <img
+          src={`${apiUrl.replace("/api", "")}/${product.photoPath}`}
+          alt={product.reference}
+          className="h-32 w-32 rounded-md border object-cover"
+        />
+      )}
+
+    {selectedPhoto && (
+      <img
+        src={URL.createObjectURL(selectedPhoto)}
+        alt="Vista previa"
+        className="h-32 w-32 rounded-md border object-cover"
+      />
+    )}
+  </div>
+
+  <input
+    type="file"
+    accept="image/*"
+    className="mt-3"
+    onChange={(event) => {
+      const file = event.target.files?.[0] ?? null;
+      setSelectedPhoto(file);
+    }}
+  />
+</label>
       <button disabled={isSaving} className="rounded-md bg-slate-950 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50">{isSaving ? "Guardando..." : "Guardar cambios"}</button>
     </form>
     {error && <p className="mt-3 text-sm text-red-700">{error}</p>}

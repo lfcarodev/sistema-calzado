@@ -19,4 +19,10 @@ public interface ISaleRepository
 
     Task<List<Sale>> GetAllAsync(
         CancellationToken cancellationToken = default);
+
+    Task<int> CountTodayAsync(CancellationToken cancellationToken);
+
+    Task<List<Sale>> GetRecentAsync(
+    int count,
+    CancellationToken cancellationToken = default);
 }
