@@ -11,7 +11,8 @@
     "dist": "electron-builder"
   },
   "dependencies": {
-    "execa": "^9.6.1"
+    "execa": "^9.6.1",
+    "express": "^5.2.1"
   },
   "devDependencies": {
     "electron": "^43.1.1",
@@ -24,7 +25,19 @@
       "output": "dist"
     },
     "files": [
-      "**/*"
+      "main.js",
+      "package.json",
+      "node_modules/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "../release/backend",
+        "to": "backend"
+      },
+      {
+        "from": "../frontend/out",
+        "to": "frontend"
+      }
     ],
     "win": {
       "target": "nsis",

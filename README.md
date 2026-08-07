@@ -142,6 +142,29 @@ npm run dev
 
 ---
 
+# Aplicación de escritorio
+
+## Generar el backend
+
+```bash
+cd backend/src/Calzado.API
+dotnet publish -c Release -o ../../../release/backend
+```
+
+## Generar el frontend
+
+```bash
+cd frontend
+ELECTRON=true npm run build
+```
+
+## Generar el instalador
+
+```bash
+cd electron
+npm run dist
+```
+
 # Autor
 
 **Luis Felipe Caro Espinosa**
