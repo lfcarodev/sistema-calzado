@@ -138,7 +138,7 @@ npm run dev
 
 ✅ Remisiones PDF
 
-🚧 Empaquetado como aplicación de escritorio con Electron (en desarrollo)
+✅ Empaquetado como aplicación de escritorio con Electron (en desarrollo)
 
 ---
 
