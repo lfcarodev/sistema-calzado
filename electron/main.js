@@ -3,9 +3,11 @@ const express = require("express");
 const path = require("path");
 const { spawn } = require("child_process");
 const fs = require("fs");
+const http = require("http");
 
 let server;
 let backendProcess;
+let mainWindow;
 
 function startFrontend() {
   const frontend = express();
@@ -33,7 +35,7 @@ function startBackend() {
   if (!fs.existsSync(backendPath)) {
     console.error("No se encontró el backend:");
     console.error(backendPath);
-    return;
+    return false;
   }
 
   const backendDirectory = path.dirname(backendPath);
@@ -59,10 +61,52 @@ function startBackend() {
   backendProcess.on("exit", (code) => {
     console.log("Backend finalizado:", code);
   });
+
+  return true;
+}
+
+function isBackendReady() {
+  return new Promise((resolve) => {
+    const request = http.get(
+      "http://localhost:5051/weatherforecast",
+      (response) => {
+        response.resume();
+        resolve(response.statusCode >= 200 && response.statusCode < 500);
+      },
+    );
+
+    request.on("error", () => {
+      resolve(false);
+    });
+
+    request.setTimeout(1000, () => {
+      request.destroy();
+      resolve(false);
+    });
+  });
+}
+
+async function waitForBackend(maxAttempts = 30, interval = 500) {
+  console.log("Esperando a que el backend esté disponible...");
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    const ready = await isBackendReady();
+
+    if (ready) {
+      console.log(`Backend listo después de ${attempt} intento(s).`);
+      return true;
+    }
+
+    console.log(`Backend todavía no está listo (${attempt}/${maxAttempts})...`);
+
+    await new Promise((resolve) => setTimeout(resolve, interval));
+  }
+
+  return false;
 }
 
 function createWindow() {
-  const win = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 1440,
     height: 900,
     minWidth: 1280,
@@ -79,21 +123,35 @@ function createWindow() {
 
   Menu.setApplicationMenu(null);
 
-  win.loadURL("http://localhost:3000");
+  mainWindow.loadURL("http://localhost:3000");
 
-  win.once("ready-to-show", () => {
-    win.show();
+  mainWindow.once("ready-to-show", () => {
+    mainWindow.show();
   });
 }
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
   startBackend();
 
   startFrontend();
 
-  setTimeout(() => {
-    createWindow();
-  }, 2500);
+  const backendReady = await waitForBackend();
+
+  if (!backendReady) {
+    console.error("El backend no pudo iniciar correctamente.");
+
+    const { dialog } = require("electron");
+
+    dialog.showErrorBox(
+      "Error al iniciar el sistema",
+      "No se pudo iniciar el servidor del sistema. Por favor, reinicie la aplicación.",
+    );
+
+    app.quit();
+    return;
+  }
+
+  createWindow();
 
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) {
