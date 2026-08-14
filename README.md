@@ -1,6 +1,8 @@
 # Sistema de Gestión para Distribuidora de Calzado
 
-Sistema de escritorio y web desarrollado para administrar una distribuidora de calzado, permitiendo controlar inventario, proveedores, productos y ventas, con generación automática de remisiones en PDF.
+Sistema empresarial para la gestión de una distribuidora de calzado, desarrollado con .NET y Next.js y disponible como aplicación de escritorio para Windows.
+
+Permite administrar productos, proveedores, clientes, inventario y ventas, además de generar remisiones en PDF.
 
 ---
 
@@ -103,6 +105,8 @@ El backend implementa **Clean Architecture** y el patrón **CQRS**, separando la
 
 # Puesta en marcha
 
+Las siguientes instrucciones corresponden al entorno de desarrollo.
+
 ## Backend
 
 ```bash
@@ -138,11 +142,34 @@ npm run dev
 
 ✅ Remisiones PDF
 
-✅ Empaquetado como aplicación de escritorio con Electron (en desarrollo)
+✅ Aplicación de escritorio para Windows
+
+✅ Instalador de Windows
+
+✅ Backend .NET incluido en la aplicación
+
+✅ Inicio automático del backend
+
+✅ Migraciones automáticas de base de datos
+
+✅ Creación automática de directorios necesarios
 
 ---
 
-# Aplicación de escritorio
+# Aplicación de escritorio para Windows
+
+El sistema puede ejecutarse como una aplicación de escritorio independiente mediante Electron.
+
+La aplicación incluye:
+
+- Interfaz administrativa.
+- Frontend Next.js.
+- Backend ASP.NET Core.
+- Inicio automático del backend.
+- Conexión con SQL Server.
+- Migraciones automáticas de Entity Framework Core.
+- Generación automática de la carpeta de archivos necesarios.
+- Instalador para Windows mediante NSIS.
 
 ## Generar el backend
 
@@ -165,9 +192,10 @@ cd electron
 npm run dist
 ```
 
+El instalador generado se encuentra en: electron/dist/
+
 # Autor
 
 **Luis Felipe Caro Espinosa**
 
-GitHub:
-https://github.com/lfcarodev
+GitHub: [@lfcarodev](https://github.com/lfcarodev)
