@@ -3,6 +3,8 @@ using Calzado.Infrastructure.DependencyInjection;
 using Calzado.API.Middleware;
 using Calzado.API.Services;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.EntityFrameworkCore;
+using Calzado.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,7 +40,14 @@ builder.Services.AddScoped<FileStorageService>();
 
 var app = builder.Build();
 
-app.UseMiddleware<ExceptionMiddleware>();
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<CalzadoDbContext>();
+
+    db.Database.Migrate();
+}
+
+app.UseMiddleware();
 
 if (app.Environment.IsDevelopment())
 {
