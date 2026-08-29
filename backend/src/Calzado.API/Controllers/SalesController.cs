@@ -3,6 +3,7 @@ using Calzado.Application.Sales.Queries.GetSalePdf;
 using Calzado.Application.Sales.Queries.GetSales;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Calzado.Application.Documents.Models;
 
 namespace Calzado.API.Controllers;
 
@@ -36,13 +37,20 @@ public class SalesController : ControllerBase
     }
 
     [HttpGet("{id}/pdf")]
-    public async Task<IActionResult> GetPdf(int id)
+    public async Task<IActionResult> GetPdf(
+    int id,
+    [FromQuery] SaleDocumentType documentType)
     {
-        var result = await _mediator.Send(new GetSalePdfQuery(id));
+        var result = await _mediator.Send(
+            new GetSalePdfQuery(id, documentType));
+
+        var fileName = documentType == SaleDocumentType.Invoice
+            ? $"Factura-{result.Number}.pdf"
+            : $"Remision-{result.Number}.pdf";
 
         return File(
             result.Pdf,
             "application/pdf",
-            $"Remision-{result.Number}.pdf");
+            fileName);
     }
 }

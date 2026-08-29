@@ -28,20 +28,18 @@ export async function apiRequest<T>(
   }
 
   if (!response.ok) {
-  let message = `La solicitud no pudo completarse (${response.status}).`;
+    let message = `La solicitud no pudo completarse (${response.status}).`;
 
-  try {
-    const error = await response.json();
+    try {
+      const error = await response.json();
 
-    if (error?.message) {
-      message = error.message;
-    }
-  } catch {
-    
+      if (error?.message) {
+        message = error.message;
+      }
+    } catch {}
+
+    throw new ApiError(message);
   }
-
-  throw new ApiError(message);
-}
 
   if (response.status === 204) {
     return undefined as T;
@@ -62,9 +60,7 @@ export async function apiBlob(path: string): Promise<Blob> {
       if (error?.message) {
         message = error.message;
       }
-    } catch {
-      
-    }
+    } catch {}
 
     throw new ApiError(message);
   }

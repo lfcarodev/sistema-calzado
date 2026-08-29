@@ -14,5 +14,7 @@ public class SalePdfModel
 
     public decimal Total { get; set; }
 
+    public SaleDocumentType DocumentType { get; set; }
+
     public List<SalePdfItemModel> Items { get; set; } = [];
 }

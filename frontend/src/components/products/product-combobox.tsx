@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { Product } from "@/features/products/products-api";
 
 interface ProductComboboxProps {
@@ -35,19 +30,19 @@ export function ProductCombobox({
       return products;
     }
 
-    return products.filter((product) => {
-      if (!filterAvailableOnly) {
-        return true;
-      }
+    return products
+      .filter((product) => {
+        if (!filterAvailableOnly) {
+          return true;
+        }
 
-    return (
-      product.currentStock > 0 &&
-      product.salePrice !== null
-    );
-  })
-          .filter((product) =>
-            `${product.reference} ${product.color} ${product.curve}`.toLowerCase().includes(search)
-    );
+        return product.currentStock > 0 && product.salePrice !== null;
+      })
+      .filter((product) =>
+        `${product.reference} ${product.color} ${product.curve}`
+          .toLowerCase()
+          .includes(search),
+      );
   }, [products, query]);
 
   useEffect(() => {
@@ -59,50 +54,42 @@ export function ProductCombobox({
   }, [value]);
 
   useEffect(() => {
-  function handleClickOutside(event: MouseEvent) {
-    if (
-      containerRef.current &&
-      !containerRef.current.contains(event.target as Node)
-    ) {
-      setIsOpen(false);
-      setHighlightedIndex(-1);
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+        setHighlightedIndex(-1);
+      }
     }
-  }
 
-  document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
 
-  return () => {
-    document.removeEventListener(
-      "mousedown",
-      handleClickOutside
-    );
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const selectProduct = (product: Product) => {
+    onChange(product);
+
+    setQuery(`${product.reference} · ${product.color} · ${product.curve}`);
+    setIsOpen(false);
+    setHighlightedIndex(-1);
+
+    onProductSelected?.();
   };
-}, []);
 
-const selectProduct = (product: Product) => {
-  onChange(product);
-
-  setQuery(
-  `${product.reference} · ${product.color} · ${product.curve}`
-);
-  setIsOpen(false);
-  setHighlightedIndex(-1);
-
-  onProductSelected?.();
-};
-
-const formatPrice = (price: number) =>
-  new Intl.NumberFormat("es-CO", {
-    style: "currency",
-    currency: "COP",
-    maximumFractionDigits: 0,
-  }).format(price);
+  const formatPrice = (price: number) =>
+    new Intl.NumberFormat("es-CO", {
+      style: "currency",
+      currency: "COP",
+      maximumFractionDigits: 0,
+    }).format(price);
 
   return (
-    <div
-      ref={containerRef}
-      className="relative"
-    >
+    <div ref={containerRef} className="relative">
       <input
         type="text"
         placeholder="Buscar referencia..."
@@ -117,49 +104,45 @@ const formatPrice = (price: number) =>
           setHighlightedIndex(-1);
         }}
         onKeyDown={(event) => {
-  if (!isOpen) return;
+          if (!isOpen) return;
 
-  switch (event.key) {
-    case "ArrowDown":
-      event.preventDefault();
+          switch (event.key) {
+            case "ArrowDown":
+              event.preventDefault();
 
-      setHighlightedIndex((current) =>
-        Math.min(current + 1, filteredProducts.length - 1)
-      );
-      break;
+              setHighlightedIndex((current) =>
+                Math.min(current + 1, filteredProducts.length - 1),
+              );
+              break;
 
-    case "ArrowUp":
-      event.preventDefault();
+            case "ArrowUp":
+              event.preventDefault();
 
-      setHighlightedIndex((current) =>
-        Math.max(current - 1, 0)
-      );
-      break;
-    
-    case "Enter":
-  event.preventDefault();
+              setHighlightedIndex((current) => Math.max(current - 1, 0));
+              break;
 
-  if (highlightedIndex >= 0) {
-    selectProduct(filteredProducts[highlightedIndex]);
-  }
+            case "Enter":
+              event.preventDefault();
 
-  break;
+              if (highlightedIndex >= 0) {
+                selectProduct(filteredProducts[highlightedIndex]);
+              }
 
-    case "Escape":
-      setIsOpen(false);
-      setHighlightedIndex(-1);
-      break;
-  }
-}}
+              break;
+
+            case "Escape":
+              setIsOpen(false);
+              setHighlightedIndex(-1);
+              break;
+          }
+        }}
         className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-100"
       />
 
       {isOpen && query !== "" && (
         <div className="absolute z-20 mt-1 max-h-64 w-full overflow-auto rounded-md border border-slate-200 bg-white shadow-lg">
           {filteredProducts.length === 0 ? (
-            <p className="p-3 text-sm text-slate-500">
-              Sin resultados.
-            </p>
+            <p className="p-3 text-sm text-slate-500">Sin resultados.</p>
           ) : (
             filteredProducts.map((product, index) => (
               <button

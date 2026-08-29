@@ -14,6 +14,19 @@ export function createSale(input: SaleInput) {
   });
 }
 
-export interface Sale { id: number; number: string; date: string; customer: string; total: number; }
-export function getSales() { return apiRequest<Sale[]>("/sales", { cache: "no-store" }); }
-export function getSalePdf(id: number) { return apiBlob(`/sales/${id}/pdf`); }
+export interface Sale {
+  id: number;
+  number: string;
+  date: string;
+  customer: string;
+  total: number;
+}
+export function getSales() {
+  return apiRequest<Sale[]>("/sales", { cache: "no-store" });
+}
+
+export type SaleDocumentType = "remission" | "invoice";
+
+export function getSalePdf(id: number, documentType: SaleDocumentType) {
+  return apiBlob(`/sales/${id}/pdf?documentType=${documentType}`);
+}

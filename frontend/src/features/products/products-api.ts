@@ -1,5 +1,8 @@
 import { apiRequest } from "@/lib/api-client";
-import { getSuppliers, type SupplierOption } from "@/features/suppliers/suppliers-api";
+import {
+  getSuppliers,
+  type SupplierOption,
+} from "@/features/suppliers/suppliers-api";
 
 export interface Product {
   id: number;
@@ -43,8 +46,7 @@ export function getProducts(reference?: string) {
 
 export { getSuppliers, type SupplierOption };
 
-const apiUrl =
-  process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5051/api";
+const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5051/api";
 
 export async function createProduct(input: CreateProductInput) {
   const formData = new FormData();
@@ -86,10 +88,7 @@ export async function createProduct(input: CreateProductInput) {
   return response.json();
 }
 
-export async function updateProduct(
-  id: number,
-  input: UpdateProductInput
-) {
+export async function updateProduct(id: number, input: UpdateProductInput) {
   const formData = new FormData();
 
   formData.append("id", id.toString());

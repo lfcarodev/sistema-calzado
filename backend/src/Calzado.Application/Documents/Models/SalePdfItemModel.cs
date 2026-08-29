@@ -9,6 +9,8 @@ public class SalePdfItemModel
     public string Curve { get; set; } = string.Empty;
 
     public int Quantity { get; set; }
+    
+    public decimal Dozens => Quantity / 12m;
 
     public decimal UnitPrice { get; set; }
 

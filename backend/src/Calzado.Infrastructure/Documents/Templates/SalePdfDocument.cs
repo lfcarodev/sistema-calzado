@@ -14,6 +14,9 @@ public class SalePdfDocument : IDocument
         _model = model;
     }
 
+    private bool IsInvoice =>
+    _model.DocumentType == SaleDocumentType.Invoice;
+
     public DocumentMetadata GetMetadata() => DocumentMetadata.Default;
 
     public void Compose(IDocumentContainer container)
@@ -92,7 +95,7 @@ public class SalePdfDocument : IDocument
 
         column.Item()
             .AlignCenter()
-            .Text("REMISIÓN")
+            .Text(IsInvoice ? "FACTURA" : "REMISIÓN")
             .FontSize(20)
             .Bold();
 
@@ -107,54 +110,50 @@ public class SalePdfDocument : IDocument
 
     private void CustomerSection(ColumnDescriptor column)
     {
-        column.Item().Table(table =>
-        {
-            table.ColumnsDefinition(columns =>
+        column.Item()
+            .Border(1)
+            .BorderColor("#BDBDBD")
+            .Padding(8)
+            .Column(info =>
             {
-                columns.RelativeColumn();
-                columns.RelativeColumn();
+                info.Spacing(4);
+
+                info.Item().Row(row =>
+                {
+                    row.RelativeItem()
+                        .Text(text =>
+                        {
+                            text.Span("Cliente: ").Bold();
+                            text.Span(_model.CustomerName);
+                        });
+
+                    row.RelativeItem()
+                        .Text(text =>
+                        {
+                            text.Span("Fecha: ").Bold();
+                            text.Span(_model.Date.ToString("dd/MM/yyyy"));
+                        });
+                });
+
+                info.Item().Row(row =>
+                {
+                    row.RelativeItem()
+                        .Text(text =>
+                        {
+                            text.Span("Tel: ").Bold();
+                            text.Span(_model.Phone ?? "No registrado");
+                        });
+
+                    row.RelativeItem()
+                        .Text(text =>
+                        {
+                            text.Span("N.º: ").Bold();
+                            text.Span(_model.Number);
+                        });
+                });
             });
 
-            // Primera fila
-            table.Cell()
-                .Border(1)
-                .Padding(8)
-                .Column(x =>
-                {
-                    x.Item().Text("Cliente").Bold().FontSize(11);
-                    x.Item().Text(_model.CustomerName);
-                });
-
-            table.Cell()
-                .Border(1)
-                .Padding(8)
-                .Column(x =>
-                {
-                    x.Item().Text("Fecha").Bold().FontSize(11);
-                    x.Item().Text(_model.Date.ToString("dd/MM/yyyy"));
-                });
-
-            // Segunda fila
-            table.Cell()
-                .Border(1)
-                .Padding(8)
-                .Column(x =>
-                {
-                    x.Item().Text("Teléfono").Bold().FontSize(11);
-                    x.Item().Text(_model.Phone ?? "No registrado");
-                });
-
-            table.Cell()
-                .Border(1)
-                .Padding(8)
-                .Column(x =>
-                {
-                    x.Item().Text("Remisión").Bold().FontSize(11);
-                    x.Item().Text(_model.Number);
-                });
-        });
-
-        column.Item().PaddingBottom(20);
+        column.Item().PaddingBottom(12);
     }
 
     private void ProductsTable(ColumnDescriptor column)
@@ -166,9 +165,14 @@ public class SalePdfDocument : IDocument
                 columns.RelativeColumn(2); // Referencia
                 columns.RelativeColumn();  // Color
                 columns.RelativeColumn();  // Curva
-                columns.RelativeColumn();  // Cantidad
-                columns.RelativeColumn(2); // Precio
-                columns.RelativeColumn(2); // Total
+                columns.RelativeColumn(); // Cant. Pares
+                columns.RelativeColumn(); // Cant. Docenas
+
+                if (IsInvoice)
+                {
+                    columns.RelativeColumn(2); // Precio
+                    columns.RelativeColumn(2); // Total
+                }
             });
 
             table.Header(header =>
@@ -183,40 +187,109 @@ public class SalePdfDocument : IDocument
                         .PaddingHorizontal(4);
                 }
 
-                HeaderCell(header.Cell()).Text("Referencia").Bold();
-                HeaderCell(header.Cell()).AlignCenter().Text("Color").Bold();
-                HeaderCell(header.Cell()).AlignCenter().Text("Curva").Bold();
-                HeaderCell(header.Cell()).AlignCenter().Text("Cant.").Bold();
-                HeaderCell(header.Cell()).AlignRight().Text("Precio").Bold();
-                HeaderCell(header.Cell()).AlignRight().Text("Total").Bold();
+                HeaderCell(header.Cell())
+                    .Text("Referencia")
+                    .Bold();
+
+                HeaderCell(header.Cell())
+                    .AlignCenter()
+                    .Text("Color")
+                    .Bold();
+
+                HeaderCell(header.Cell())
+                    .AlignCenter()
+                    .Text("Curva")
+                    .Bold();
+
+                HeaderCell(header.Cell())
+                    .AlignCenter()
+                    .Text("Cant. Pares")
+                    .Bold();
+
+                HeaderCell(header.Cell())
+                    .AlignCenter()
+                    .Text("Cant. Docenas")
+                    .Bold();
+
+                if (IsInvoice)
+                {
+                    HeaderCell(header.Cell())
+                        .AlignRight()
+                        .Text("Precio")
+                        .Bold();
+
+                    HeaderCell(header.Cell())
+                        .AlignRight()
+                        .Text("Total")
+                        .Bold();
+                }
             });
 
             foreach (var item in _model.Items)
             {
-                table.Cell().BorderBottom(1).BorderColor("#DDDDDD").PaddingVertical(5).Text(item.Reference);
+                table.Cell()
+                    .BorderBottom(1)
+                    .BorderColor("#DDDDDD")
+                    .PaddingVertical(5)
+                    .Text(item.Reference);
 
-                table.Cell().BorderBottom(1).BorderColor("#DDDDDD").PaddingVertical(5)
-                    .AlignCenter().Text(item.Color);
+                table.Cell()
+                    .BorderBottom(1)
+                    .BorderColor("#DDDDDD")
+                    .PaddingVertical(5)
+                    .AlignCenter()
+                    .Text(item.Color);
 
-                table.Cell().BorderBottom(1).BorderColor("#DDDDDD").PaddingVertical(5)
-                    .AlignCenter().Text(item.Curve);
+                table.Cell()
+                    .BorderBottom(1)
+                    .BorderColor("#DDDDDD")
+                    .PaddingVertical(5)
+                    .AlignCenter()
+                    .Text(item.Curve);
 
-                table.Cell().BorderBottom(1).BorderColor("#DDDDDD").PaddingVertical(5)
-                    .AlignCenter().Text(item.Quantity.ToString());
+                table.Cell()
+                    .BorderBottom(1)
+                    .BorderColor("#DDDDDD")
+                    .PaddingVertical(5)
+                    .AlignCenter()
+                    .Text(item.Quantity.ToString());
 
-                table.Cell().BorderBottom(1).BorderColor("#DDDDDD").PaddingVertical(5)
-                    .AlignRight().Text(item.UnitPrice.ToString("C0"));
+                table.Cell()
+                    .BorderBottom(1)
+                    .BorderColor("#DDDDDD")
+                    .PaddingVertical(5)
+                    .AlignCenter()
+                    .Text(item.Dozens.ToString("0.##"));
 
-                table.Cell().BorderBottom(1).BorderColor("#DDDDDD").PaddingVertical(5)
-                    .AlignRight().Text(item.Total.ToString("C0"));
+                if (IsInvoice)
+                {
+                    table.Cell()
+                        .BorderBottom(1)
+                        .BorderColor("#DDDDDD")
+                        .PaddingVertical(5)
+                        .AlignRight()
+                        .Text(item.UnitPrice.ToString("C0"));
+
+                    table.Cell()
+                        .BorderBottom(1)
+                        .BorderColor("#DDDDDD")
+                        .PaddingVertical(5)
+                        .AlignRight()
+                        .Text(item.Total.ToString("C0"));
+                }
             }
         });
 
-        column.Item().PaddingBottom(20);
+        column.Item().PaddingBottom(12);
     }
 
     private void Totals(ColumnDescriptor column)
     {
+        if (!IsInvoice)
+        {
+            return;
+        }
+
         column.Item()
             .AlignRight()
             .Width(220)

@@ -38,7 +38,8 @@ public class GetSalePdfQueryHandler
             CustomerName = sale.Customer.Name,
             Phone = sale.Customer.Phone,
             Observation = sale.Observation,
-            Total = sale.Total
+            Total = sale.Total,
+            DocumentType = request.DocumentType
         };
 
         foreach (var detail in sale.Details)
