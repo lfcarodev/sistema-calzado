@@ -18,6 +18,7 @@ public class CalzadoDbContext : DbContext
     public DbSet<Customer> Customers => Set<Customer>();
     public DbSet<Sale> Sales => Set<Sale>();
     public DbSet<SaleDetail> SaleDetails => Set<SaleDetail>();
+    public DbSet<SalePayment> SalePayments => Set<SalePayment>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

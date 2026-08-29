@@ -18,6 +18,8 @@ public class Sale : AuditableEntity
 
     public List<SaleDetail> Details { get; private set; } = [];
 
+    public List<SalePayment> Payments { get; private set; } = [];
+
     private Sale()
     {
     }
@@ -42,6 +44,11 @@ public class Sale : AuditableEntity
     public void AddDetail(SaleDetail detail)
     {
         Details.Add(detail);
+    }
+
+    public void AddPayment(SalePayment payment)
+    {
+        Payments.Add(payment);
     }
 
     public void UpdateTotal(decimal total)

@@ -113,6 +113,25 @@ public class CreateSaleCommandHandler
 
         sale.UpdateTotal(total);
 
+        if (request.TotalPaid < 0)
+        {
+            throw new Exception("Paid amount cannot be negative.");
+        }
+
+        if (request.TotalPaid > total)
+        {
+            throw new Exception("Paid amount cannot be greater than sale total.");
+        }
+
+        if (request.TotalPaid > 0)
+        {
+            var payment = new SalePayment(
+                sale,
+                request.TotalPaid);
+
+            sale.AddPayment(payment);
+        }
+
         await _saleRepository.AddAsync(
             sale,
             cancellationToken);
