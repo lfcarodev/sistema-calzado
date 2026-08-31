@@ -9,6 +9,7 @@ const navigation = [
   { href: "/proveedores", label: "Proveedores", icon: "♧" },
   { href: "/ventas", label: "Ventas", icon: "◷" },
   { href: "/inventario", label: "Inventario", icon: "▤" },
+  { href: "/cartera", label: "Cartera", icon: "$" },
 ];
 
 export function AppSidebar() {

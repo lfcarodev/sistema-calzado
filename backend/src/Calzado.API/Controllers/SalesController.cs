@@ -1,9 +1,12 @@
 using Calzado.Application.Sales.Commands.CreateSale;
 using Calzado.Application.Sales.Queries.GetSalePdf;
 using Calzado.Application.Sales.Queries.GetSales;
+using Calzado.Application.Sales.Queries.GetAccountsReceivable;
+using Calzado.Application.Documents.Models;
+using Calzado.Application.Sales.Commands.AddSalePayment;
+
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Calzado.Application.Documents.Models;
 
 namespace Calzado.API.Controllers;
 
@@ -36,6 +39,14 @@ public class SalesController : ControllerBase
         });
     }
 
+    [HttpGet("accounts-receivable")]
+    public async Task<ActionResult<List<AccountReceivableDto>>> GetAccountsReceivable()
+    {
+        return Ok(
+            await _mediator.Send(
+                new GetAccountsReceivableQuery()));
+    }
+
     [HttpGet("{id}/pdf")]
     public async Task<IActionResult> GetPdf(
     int id,
@@ -52,5 +63,20 @@ public class SalesController : ControllerBase
             result.Pdf,
             "application/pdf",
             fileName);
+    }
+
+    [HttpPost("{id}/payments")]
+    public async Task<IActionResult> AddPayment(
+    int id,
+    [FromBody] AddSalePaymentCommand command)
+    {
+        if (id != command.SaleId)
+        {
+            return BadRequest("Sale ID does not match.");
+        }
+
+        await _mediator.Send(command);
+
+        return NoContent();
     }
 }

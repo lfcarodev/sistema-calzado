@@ -125,11 +125,7 @@ public class CreateSaleCommandHandler
 
         if (request.TotalPaid > 0)
         {
-            var payment = new SalePayment(
-                sale,
-                request.TotalPaid);
-
-            sale.AddPayment(payment);
+            sale.AddPayment(request.TotalPaid);
         }
 
         await _saleRepository.AddAsync(

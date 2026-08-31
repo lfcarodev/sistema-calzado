@@ -39,17 +39,21 @@ public class SaleRepository : ISaleRepository
             .Include(s => s.Customer)
             .Include(s => s.Details)
                 .ThenInclude(d => d.Product)
+            .Include(s => s.Payments)
             .FirstOrDefaultAsync(
                 s => s.Id == id,
                 cancellationToken);
     }
 
-    public async Task<List<Sale>> GetAllAsync(CancellationToken cancellationToken = default)
+    public async Task<List<Sale>> GetAllAsync(
+    CancellationToken cancellationToken = default)
     {
-        return await _context.Sales.Include(s => s.Customer)
-            .OrderByDescending(s => s.Date).ToListAsync(cancellationToken);
+        return await _context.Sales
+            .Include(s => s.Customer)
+            .Include(s => s.Payments)
+            .OrderByDescending(s => s.Date)
+            .ToListAsync(cancellationToken);
     }
-
     public async Task<int> CountTodayAsync(CancellationToken cancellationToken)
     {
         var today = DateTime.Today;

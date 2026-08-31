@@ -30,6 +30,7 @@ export function SalesScreen() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [unit, setUnit] = useState<SaleUnit>("pair");
+  const [totalPaid, setTotalPaid] = useState(0);
   const [message, setMessage] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [historyRefreshKey, setHistoryRefreshKey] = useState(0);
@@ -87,6 +88,7 @@ export function SalesScreen() {
         customerName: String(data.get("customerName")).trim(),
         phone: String(data.get("phone")).trim() || null,
         observation: String(data.get("observation")).trim() || null,
+        totalPaid,
         items: lines.map((line) => ({
           productId: line.product.id,
           quantity: line.quantityInPairs,
@@ -95,6 +97,7 @@ export function SalesScreen() {
 
       form.reset();
       setLines([]);
+      setTotalPaid(0);
       setMessage(`Venta ${result.number} registrada correctamente.`);
       setProducts(await getProducts());
 
@@ -344,16 +347,58 @@ export function SalesScreen() {
             </div>
           )}
         </div>
-        <div className="mt-4 flex items-center justify-between border-t border-slate-200 pt-4">
-          <span className="text-lg font-semibold text-slate-900">
-            Total: {money.format(total)}
-          </span>
-          <button
-            disabled={isSaving || lines.length === 0}
-            className="rounded-md bg-slate-950 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
-          >
-            {isSaving ? "Registrando..." : "Confirmar venta"}
-          </button>
+        <div className="mt-4 border-t border-slate-200 pt-4">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div className="space-y-3">
+              <div>
+                <p className="text-sm text-slate-500">Total de la venta</p>
+                <p className="text-xl font-semibold text-slate-900">
+                  {money.format(total)}
+                </p>
+              </div>
+
+              <label className="block text-sm font-medium text-slate-700">
+                Total pagado
+                <input
+                  type="number"
+                  min="0"
+                  max={total}
+                  step="1"
+                  value={totalPaid}
+                  onChange={(event) => {
+                    const value = Number(event.target.value);
+
+                    if (value < 0) {
+                      setTotalPaid(0);
+                      return;
+                    }
+
+                    if (value > total) {
+                      setTotalPaid(total);
+                      return;
+                    }
+
+                    setTotalPaid(value);
+                  }}
+                  className={inputClass}
+                />
+              </label>
+
+              <p className="text-sm text-slate-500">
+                Pendiente:{" "}
+                <span className="font-semibold text-slate-900">
+                  {money.format(Math.max(total - totalPaid, 0))}
+                </span>
+              </p>
+            </div>
+
+            <button
+              disabled={isSaving || lines.length === 0}
+              className="rounded-md bg-slate-950 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
+            >
+              {isSaving ? "Registrando..." : "Confirmar venta"}
+            </button>
+          </div>
         </div>
         {message && (
           <p className="mt-4 rounded-md bg-amber-50 px-3 py-2 text-sm text-amber-800">
